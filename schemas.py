@@ -24,6 +24,7 @@ class CreateUserRequest(BaseModel):
     last_name: str = Field(min_length=1, max_length=50)
     password: str = Field(min_length=1, max_length=100)
     role: str = Field(min_length=1, max_length=50)
+    phone_number: str = Field(min_length=9, max_length=50)
 
 class UserResponse(BaseModel):
     id: int
@@ -32,6 +33,7 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     role: str
+    phone_number: str
 
     model_config = {"from_attributes": True}
 

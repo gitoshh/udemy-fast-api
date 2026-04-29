@@ -1,10 +1,10 @@
 from fastapi import APIRouter, status, Depends, HTTPException
-from schemas import CreateUserRequest, TokenResponse
-from models import Users
+from ..schemas import CreateUserRequest, TokenResponse
+from ..models import Users
 from passlib.context import CryptContext
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
-from database import get_db
+from ..database import get_db
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
 from jose import jwt, JWTError
@@ -63,6 +63,7 @@ def create_user(db: db_dependency, user_request: CreateUserRequest):
         last_name=user_request.last_name,
         hashed_password=bcrypt_context.hash(user_request.password),
         role=user_request.role,
+        phone_number=user_request.phone_number,
     )
     db.add(user)
     db.commit()

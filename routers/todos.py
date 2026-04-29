@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Path, status
 from sqlalchemy.orm import Session
 
-import models
-from database import get_db
-from schemas import TodoRequest, TodoResponse
+from ..models import Todo, Users
+from ..database import get_db
+from ..schemas import TodoRequest, TodoResponse
 
 from .auth import get_current_user
 

@@ -1,14 +1,14 @@
 # imports
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, status
-import models
-from database import engine
-from routers import todos, auth, admin, user
+from .models import Base
+from .database import engine
+from .routers import todos, auth, admin, user
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    models.Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
     yield
 
 app = FastAPI(lifespan=lifespan)

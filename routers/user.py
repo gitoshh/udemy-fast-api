@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
-from models import Users
-from routers.auth import get_current_user
-from database import get_db
+from ..models import Users
+from .auth import get_current_user
+from ..database import get_db
 from passlib.context import CryptContext
-from schemas import PasswordChangeRequest
+from ..schemas import PasswordChangeRequest
 
 router = APIRouter(prefix="/users", tags=["users"])
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -26,5 +26,14 @@ async def update_password(current_user: current_user_dependency, db: db_dependen
     if not bcrypt_context.verify(password_change.current_password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid current password")
     user.hashed_password = bcrypt_context.hash(password_change.new_password)
+    db.commit()
+    return user
+
+@router.put("/update/phone_number", status_code=status.HTTP_204_NO_CONTENT)
+async def update_phone_number(current_user: current_user_dependency, db: db_dependency, phone_number: str):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    user = db.query(Users).filter(Users.id == current_user["user_id"]).first()
+    user.phone_number = phone_number
     db.commit()
     return user
